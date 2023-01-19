@@ -38,6 +38,7 @@ where
 pub fn authority_keys_from_seed(s: &str) -> (AuraId, GrandpaId) {
 	(get_from_seed::<AuraId>(s), get_from_seed::<GrandpaId>(s))
 }
+
 /// Helper function to get an `AccountId` from an ECDSA Key Pair.
 pub fn get_account_id_from_pair(pair: ecdsa::Pair) -> Option<AccountId> {
 	let decompressed = PublicKey::parse_slice(&pair.public().0, Some(PublicKeyFormat::Compressed))
@@ -49,13 +50,14 @@ pub fn get_account_id_from_pair(pair: ecdsa::Pair) -> Option<AccountId> {
 
 	Some(H160::from(H256::from_slice(Keccak256::digest(&m).as_slice())).into())
 }
-//generate properties.
+
 pub fn chainspec_properties() -> Properties {
 	let mut properties = Properties::new();
 	properties.insert("tokenDecimals".into(), 18.into());
 	properties.insert("tokenSymbol".into(), "INV".into());
 	properties
 }
+
 pub fn development_config() -> Result<ChainSpec, String> {
 	let wasm_binary = WASM_BINARY.ok_or_else(|| "Development wasm not available".to_string())?;
 
@@ -75,9 +77,9 @@ pub fn development_config() -> Result<ChainSpec, String> {
 				// Pre-funded accounts
 				vec![
 					get_account_id_from_seed::<ecdsa::Public>("Alice"),
- 					get_account_id_from_seed::<ecdsa::Public>("Bob"),
- 					get_account_id_from_seed::<ecdsa::Public>("Alice//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Bob//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Bob"),
+					get_account_id_from_seed::<ecdsa::Public>("Alice//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Bob//stash"),
 				],
 				true,
 			)
@@ -118,17 +120,17 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 				// Pre-funded accounts
 				vec![
 					get_account_id_from_seed::<ecdsa::Public>("Alice"),
- 					get_account_id_from_seed::<ecdsa::Public>("Bob"),
- 					get_account_id_from_seed::<ecdsa::Public>("Charlie"),
- 					get_account_id_from_seed::<ecdsa::Public>("Dave"),
- 					get_account_id_from_seed::<ecdsa::Public>("Eve"),
- 					get_account_id_from_seed::<ecdsa::Public>("Ferdie"),
- 					get_account_id_from_seed::<ecdsa::Public>("Alice//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Bob//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Charlie//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Dave//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Eve//stash"),
- 					get_account_id_from_seed::<ecdsa::Public>("Ferdie//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Bob"),
+					get_account_id_from_seed::<ecdsa::Public>("Charlie"),
+					get_account_id_from_seed::<ecdsa::Public>("Dave"),
+					get_account_id_from_seed::<ecdsa::Public>("Eve"),
+					get_account_id_from_seed::<ecdsa::Public>("Ferdie"),
+					get_account_id_from_seed::<ecdsa::Public>("Alice//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Bob//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Charlie//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Dave//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Eve//stash"),
+					get_account_id_from_seed::<ecdsa::Public>("Ferdie//stash"),
 				],
 				true,
 			)

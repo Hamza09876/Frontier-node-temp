@@ -55,6 +55,7 @@ pub use sp_runtime::{Perbill, Permill};
 
 mod precompiles;
 use precompiles::FrontierPrecompiles;
+
 mod account;
 use account::AccountId20;
 
@@ -63,11 +64,13 @@ pub type BlockNumber = u32;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = account::EthereumSignature;
+
 /// Some way of identifying an account on the chain. We intentionally make it equivalent
 /// to the public key of our transaction signing scheme.
 // pub type AccountId = <<Signature as Verify>::Signer as IdentifyAccount>::AccountId;
 pub type AccountId = AccountId20;
 // pub type Address = AccountId;
+
 /// The type for looking up accounts. We don't expect more than 4 billion of them, but you
 /// never know...
 pub type AccountIndex = u32;
@@ -294,28 +297,31 @@ impl<F: FindAuthor<u32>> FindAuthor<H160> for FindAuthorTruncated<F> {
 		I: 'a + IntoIterator<Item = (ConsensusEngineId, &'a [u8])>,
 	{
 		use sp_core::crypto::ByteArray;
- 		F::find_author(digests).and_then(|i| {
- 			Aura::authorities().get(i as usize).and_then(|id| {
- 				let raw = id.to_raw_vec();
+		F::find_author(digests).and_then(|i| {
+			Aura::authorities().get(i as usize).and_then(|id| {
+				let raw = id.to_raw_vec();
 
- 				if raw.len() >= 24 {
- 					Some(H160::from_slice(&raw[4..24]))
- 				} else {
- 					None
- 				}
- 			})
- 		})
+				if raw.len() >= 24 {
+					Some(H160::from_slice(&raw[4..24]))
+				} else {
+					None
+				}
+			})
+		})
 	}
 }
+
 pub struct FromH160;
- impl<T> pallet_evm::AddressMapping<T> for FromH160
- where
- 	T: From<H160>,
- {
- 	fn into_account_id(address: H160) -> T {
- 		address.into()
- 	}
- }
+impl<T> pallet_evm::AddressMapping<T> for FromH160
+where
+	T: From<H160>,
+{
+	fn into_account_id(address: H160) -> T {
+		address.into()
+	}
+}
+
+
 parameter_types! {
 	pub const ChainId: u64 = 42;
 	pub BlockGasLimit: U256 = U256::from(u32::max_value());
@@ -327,7 +333,7 @@ impl pallet_evm::Config for Runtime {
 	type GasWeightMapping = ();
 	type BlockHashMapping = pallet_ethereum::EthereumBlockHashMapping<Self>;
 	type CallOrigin = EnsureAddressRoot<AccountId>;
- 	type WithdrawOrigin = EnsureAddressNever<AccountId>;
+	type WithdrawOrigin = EnsureAddressNever<AccountId>;
 	type AddressMapping = FromH160;
 	type Currency = Balances;
 	type Event = Event;
